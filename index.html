@@ -1,3 +1,21 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>MHIGS</title>
+</head>
+<body>
+
+<h2>MHIGS - Acceso</h2>
+
+<input type="email" id="email" placeholder="Correo"><br><br>
+<input type="password" id="password" placeholder="Contraseña"><br><br>
+
+<button id="registerBtn">Registrarse</button>
+<button id="loginBtn">Ingresar</button>
+
+<p id="message"></p>
+
 <script type="module">
 
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
@@ -7,53 +25,60 @@ import { getFirestore, doc, setDoc, getDoc }
 from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
 const firebaseConfig = {
-  apiKey: "TU_API_KEY",
+  apiKey: apiKey: "AIzaSyDeuX21naEnxCmXZW1BxVbrRMbFjN4fF70",
   authDomain: "mhigs-database-01.firebaseapp.com",
   projectId: "mhigs-database-01",
   storageBucket: "mhigs-database-01.firebasestorage.app",
   messagingSenderId: "613030409692",
-  appId: "1:613030409692:web:791e7a2f9ac5fc58c00b19"
+  appId: "1:613030409692:web:791e7a2f9ac5fc58c00b19",
 };
 
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const db = getFirestore(app);
 
-window.register = async function(){
+document.getElementById("registerBtn").addEventListener("click", async () => {
+
   const email = document.getElementById("email").value;
   const password = document.getElementById("password").value;
 
-  try{
-    const userCredential = await createUserWithEmailAndPassword(auth,email,password);
+  try {
+    const userCredential = await createUserWithEmailAndPassword(auth, email, password);
     const user = userCredential.user;
 
-    await setDoc(doc(db,"users",user.uid),{
+    await setDoc(doc(db, "users", user.uid), {
       email: email,
       role: "Analista",
       createdAt: new Date()
     });
 
-    document.getElementById("message").innerText="Usuario creado.";
-  }catch(error){
-    document.getElementById("message").innerText=error.message;
+    document.getElementById("message").innerText = "Usuario creado correctamente.";
+  } catch (error) {
+    document.getElementById("message").innerText = error.message;
   }
-}
 
-window.login = async function(){
+});
+
+document.getElementById("loginBtn").addEventListener("click", async () => {
+
   const email = document.getElementById("email").value;
   const password = document.getElementById("password").value;
 
-  try{
-    const userCredential = await signInWithEmailAndPassword(auth,email,password);
+  try {
+    const userCredential = await signInWithEmailAndPassword(auth, email, password);
     const user = userCredential.user;
 
-    const userDoc = await getDoc(doc(db,"users",user.uid));
+    const userDoc = await getDoc(doc(db, "users", user.uid));
     const role = userDoc.data().role;
 
-    document.getElementById("message").innerText="Bienvenido. Rol: "+role;
-  }catch(error){
-    document.getElementById("message").innerText=error.message;
+    document.getElementById("message").innerText = "Bienvenido. Rol: " + role;
+  } catch (error) {
+    document.getElementById("message").innerText = error.message;
   }
-}
+
+});
 
 </script>
+
+</body>
+</html>
